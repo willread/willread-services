@@ -1,0 +1,39 @@
+version: "3.8"
+services:
+  nginx:
+    restart: always
+    build: .
+    ports:
+      - "8080:80"
+      - "443:443"
+    secrets:
+      - gamera_cert
+      - gamera_key
+  gamera-api:
+    # image: willread/gamera-api
+    build:
+      context: ../gamera-api
+      dockerfile: Dockerfile
+    environment:
+      - PORT=3004
+      - MONGODB_URI=mongodb://gamera-mongo/gamera
+      - AUTH0_API_IDENTIFIER=https://api.gamera.org
+      - AUTH0_DOMAIN=gamera.us.auth0.co
+    env_file:
+      - env/gamera-api.env
+    restart: always
+    ports:
+      - "3004:3004"
+    links:
+      - gamera-mongo
+  gamera-mongo:
+    image: mongo
+    volumes:
+      - ./data:/data/db
+    ports:
+      - "27017:27017"
+secrets:
+  gamera_cert:
+    file: ./secrets/gamera.org-cert.pem
+  gamera_key:
+    file: ./secrets/gamera.org-key.pem

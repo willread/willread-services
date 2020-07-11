@@ -1,0 +1,6 @@
+env/*
+!env/.gitkeep
+data/*
+!data/.gitkeep
+secrets/*
+!secrets/.gitkeep
