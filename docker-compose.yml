@@ -4,11 +4,14 @@ services:
     restart: always
     build: .
     ports:
-      - "8080:80"
+      - "80:80"
       - "443:443"
     secrets:
       - gamera_cert
       - gamera_key
+    networks:
+      - default
+      - gamera
   gamera-api:
     # image: willread/gamera-api
     build:
@@ -26,14 +29,23 @@ services:
       - "3004:3004"
     links:
       - gamera-mongo
+    networks:
+      - default
+      - gamera
   gamera-mongo:
     image: mongo
     volumes:
       - ./data:/data/db
     ports:
       - "27017:27017"
+    networks:
+      - gamera
 secrets:
   gamera_cert:
     file: ./secrets/gamera.org-cert.pem
   gamera_key:
     file: ./secrets/gamera.org-key.pem
+networks:
+  gamera:
+    driver: bridge
+    internal: true
