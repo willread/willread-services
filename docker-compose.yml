@@ -13,31 +13,33 @@ services:
       - default
       - gamera
   gamera-api:
-    # image: willread/gamera-api
-    build:
-      context: ../gamera-api
-      dockerfile: Dockerfile
+    image: willread/gamera-api
+    # build:
+    #   context: ../gamera-api
+    #   dockerfile: Dockerfile
     environment:
       - PORT=3004
-      - MONGODB_URI=mongodb://gamera-mongo/gamera
       - AUTH0_API_IDENTIFIER=https://api.gamera.org
       - AUTH0_DOMAIN=gamera.us.auth0.co
     env_file:
-      - env/gamera-api.env
+      - ./env/gamera-api.env
     restart: always
-    ports:
-      - "3004:3004"
+    expose:
+      - "3004"
     links:
       - gamera-mongo
     networks:
-      - default
       - gamera
+      - default
   gamera-mongo:
     image: mongo
+    env_file:
+      - ./env/gamera-mongo.env
     volumes:
-      - ./data:/data/db
-    ports:
-      - "27017:27017"
+      - ./data/gamera-mongo:/data/db
+    restart: always
+    expose:
+      - "27017"
     networks:
       - gamera
 secrets:

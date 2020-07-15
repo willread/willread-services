@@ -1,5 +1,4 @@
 - Watchtower
 - Certbot
-- Databases, etc.. on private network
 - Backup Databases
 - Secrets and env stored safely
